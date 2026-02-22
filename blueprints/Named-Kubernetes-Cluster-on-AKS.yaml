@@ -1,0 +1,41 @@
+spec_version: 2
+description: >
+  Deploy a named Kubernetes cluster on AKS with monitoring support 
+  through Azure Log Analytics, Azure AD RBAC, KMS etcd encryption, 
+  disk encryption set, and private cluster configuration.
+
+inputs:
+  agent:
+    type: agent
+    description: "Select the Torque agent to deploy this environment"
+  Azure Region:
+    type: string
+    description: "Azure region for deployment"
+    default: "eastus"
+    allowed-values:
+      - westeurope
+      - eastus
+      - eastus2
+      - centralus
+      - northeurope
+      - westus2
+
+outputs:
+  AKS Cluster ID:
+    value: '{{ .grains.named-aks-cluster.outputs.test_aks_named_id }}'
+    quick: true
+
+grains:
+  named-aks-cluster:
+    kind: terraform
+    spec:
+      source:
+        store: Azure
+        path: assets/named-aks-cluster
+      agent:
+        name: '{{ .inputs.agent }}'
+      inputs:
+        - location: '{{ .inputs.["Azure Region"] }}'
+      outputs:
+        - test_aks_named_id
+        - test_aks_named_identity

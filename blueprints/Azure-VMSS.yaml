@@ -1,0 +1,49 @@
+spec_version: 2
+description: >
+  Deploy a Virtual Machine Scale Set (VMSS) on Azure with a Linux VM, 
+  VNet, NSG, and SSH key authentication.
+
+inputs:
+  agent:
+    type: agent
+    description: "Select the Torque agent to deploy this environment"
+  Azure Region:
+    type: string
+    description: "Azure region for deployment"
+    default: "eastus"
+    allowed-values:
+      - westeurope
+      - eastus
+      - eastus2
+      - centralus
+      - northeurope
+      - westus2
+  VM Size:
+    type: string
+    description: "Azure VM size for the scale set"
+    default: "Standard_F2"
+    allowed-values:
+      - Standard_F2
+      - Standard_D2s_v3
+      - Standard_D4s_v3
+      - Standard_B2s
+
+outputs:
+  Linux VM VMSS ID:
+    value: '{{ .grains.vmss.outputs.linux_vm_vmss_id }}'
+    quick: true
+
+grains:
+  vmss:
+    kind: terraform
+    spec:
+      source:
+        store: Azure
+        path: assets/vmss
+      agent:
+        name: '{{ .inputs.agent }}'
+      inputs:
+        - location: '{{ .inputs.["Azure Region"] }}'
+        - size: '{{ .inputs.["VM Size"] }}'
+      outputs:
+        - linux_vm_vmss_id

@@ -1,0 +1,55 @@
+spec_version: 2
+description: >
+  Deploy Virtual Machines in an availability set on Azure, including 
+  a Linux (Ubuntu) and Windows VM with disk encryption, VNet, NSG, 
+  and boot diagnostics.
+
+inputs:
+  agent:
+    type: agent
+    description: "Select the Torque agent to deploy this environment"
+  Azure Region:
+    type: string
+    description: "Azure region for deployment"
+    default: "eastus"
+    allowed-values:
+      - westeurope
+      - eastus
+      - eastus2
+      - centralus
+      - northeurope
+      - westus2
+  VM Size:
+    type: string
+    description: "Azure VM size"
+    default: "Standard_F2"
+    allowed-values:
+      - Standard_F2
+      - Standard_D2s_v3
+      - Standard_D4s_v3
+      - Standard_B2s
+
+outputs:
+  Linux VM ID:
+    value: '{{ .grains.vm-availability-set.outputs.linux_vm_id }}'
+    quick: true
+  Windows VM ID:
+    value: '{{ .grains.vm-availability-set.outputs.windows_vm_id }}'
+
+grains:
+  vm-availability-set:
+    kind: terraform
+    spec:
+      source:
+        store: Azure
+        path: assets/vm-availability-set
+      agent:
+        name: '{{ .inputs.agent }}'
+      inputs:
+        - location: '{{ .inputs.["Azure Region"] }}'
+        - size: '{{ .inputs.["VM Size"] }}'
+      outputs:
+        - linux_vm_id
+        - windows_vm_id
+        - linux_public_ip
+        - windows_public_ip

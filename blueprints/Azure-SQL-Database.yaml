@@ -1,0 +1,61 @@
+spec_version: 2
+description: >
+  Deploy an Azure SQL Database with Azure AD authentication, 
+  firewall rules, and auto-generated admin credentials.
+
+inputs:
+  agent:
+    type: agent
+    description: "Select the Torque agent to deploy this environment"
+  Azure Region:
+    type: string
+    description: "Azure region for deployment"
+    default: "westeurope"
+    allowed-values:
+      - westeurope
+      - eastus
+      - eastus2
+      - centralus
+      - northeurope
+      - westus2
+  Database Name:
+    type: string
+    description: "Name for the SQL database"
+    default: "mydatabase"
+  SQL Admin Username:
+    type: string
+    description: "SQL Server admin username"
+    default: "azureuser"
+
+outputs:
+  Database Name:
+    value: '{{ .grains.sql-database.outputs.database_name }}'
+  SQL Server FQDN:
+    value: '{{ .grains.sql-database.outputs.sql_server_fqdn }}'
+    quick: true
+  SQL Server Name:
+    value: '{{ .grains.sql-database.outputs.sql_server_name }}'
+  SQL Admin Username:
+    value: '{{ .grains.sql-database.outputs.sql_admin_username }}'
+  SQL Password:
+    value: '{{ .grains.sql-database.outputs.sql_password }}'
+
+grains:
+  sql-database:
+    kind: terraform
+    spec:
+      source:
+        store: Azure
+        path: assets/SQLDB
+      agent:
+        name: '{{ .inputs.agent }}'
+      inputs:
+        - location: '{{ .inputs.["Azure Region"] }}'
+        - db_name: '{{ .inputs.["Database Name"] }}'
+        - sql_admin_username: '{{ .inputs.["SQL Admin Username"] }}'
+      outputs:
+        - database_name
+        - sql_server_fqdn
+        - sql_server_name
+        - sql_admin_username
+        - sql_password

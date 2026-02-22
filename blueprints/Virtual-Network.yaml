@@ -1,0 +1,39 @@
+spec_version: 2
+description: >
+  Deploy a Virtual Network in Azure with 3 subnets, NSG, route table, 
+  service endpoints, subnet delegation, and private link policies.
+
+inputs:
+  agent:
+    type: agent
+    description: "Select the Torque agent to deploy this environment"
+  Azure Region:
+    type: string
+    description: "Azure region for the VNet"
+    default: "eastus"
+    allowed-values:
+      - westeurope
+      - eastus
+      - eastus2
+      - centralus
+      - northeurope
+      - westus2
+
+outputs:
+  VNet ID:
+    value: '{{ .grains.virtual-network.outputs.test_vnet_id }}'
+    quick: true
+
+grains:
+  virtual-network:
+    kind: terraform
+    spec:
+      source:
+        store: Azure
+        path: assets/virtual-network
+      agent:
+        name: '{{ .inputs.agent }}'
+      inputs:
+        - vnet_location: '{{ .inputs.["Azure Region"] }}'
+      outputs:
+        - test_vnet_id
