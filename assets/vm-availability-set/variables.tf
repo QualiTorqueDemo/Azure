@@ -12,7 +12,7 @@ variable "create_resource_group" {
 
 variable "location" {
   type     = string
-  default  = "eastus"
+  default  = "westus2"
   nullable = false
 }
 

@@ -10,7 +10,7 @@ variable "end_ip_address" {
 
 variable "location" {
   type    = string
-  default = "westeurope"
+  default = "westus2"
 }
 
 variable "msi_id" {

@@ -10,13 +10,13 @@ inputs:
   Azure Region:
     type: string
     description: "Azure region for the VNet"
-    default: "eastus"
+    default: "westus2"
     allowed-values:
-      - westeurope
-      - eastus
-      - eastus2
-      - centralus
+      - northcentralus
+      - swedencentral
+      - francecentral
       - northeurope
+      - westus
       - westus2
 
 outputs:

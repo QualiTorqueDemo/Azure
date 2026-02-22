@@ -5,7 +5,7 @@ variable "create_resource_group" {
 }
 
 variable "location" {
-  default = "centralus"
+  default = "westus2"
 }
 
 variable "resource_group_name" {
