@@ -69,9 +69,7 @@ module "aks" {
   os_disk_size_gb                             = 60
   sku_tier                                    = "Standard"
   private_cluster_enabled                     = false
-  vnet_subnet = {
-    id = azurerm_subnet.default_node_pool_subnet.id
-  }
+  vnet_subnet_id                              = azurerm_subnet.default_node_pool_subnet.id
   node_pools                                  = local.nodes
   kubernetes_version                          = var.kubernetes_version
   orchestrator_version                        = var.orchestrator_version
