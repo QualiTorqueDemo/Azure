@@ -1,5 +1,5 @@
 output "database_name" {
-  value = module.sql_database.database_name
+  value = azurerm_mssql_database.db.name
 }
 
 output "sql_admin_username" {
@@ -12,9 +12,9 @@ output "sql_password" {
 }
 
 output "sql_server_fqdn" {
-  value = module.sql_database.sql_server_fqdn
+  value = azurerm_mssql_server.sql.fully_qualified_domain_name
 }
 
 output "sql_server_name" {
-  value = module.sql_database.sql_server_name
+  value = azurerm_mssql_server.sql.name
 }

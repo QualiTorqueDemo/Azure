@@ -45,9 +45,9 @@ resource "azurerm_orchestrated_virtual_machine_scale_set" "vmss" {
     storage_account_type = "Standard_LRS"
   }
   source_image_reference {
-    offer     = "UbuntuServer"
+    offer     = "0001-com-ubuntu-server-jammy"
     publisher = "Canonical"
-    sku       = "18.04-LTS"
+    sku       = "22_04-lts"
     version   = "latest"
   }
 }

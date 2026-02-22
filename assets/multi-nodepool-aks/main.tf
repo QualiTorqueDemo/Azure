@@ -48,7 +48,7 @@ locals {
       name                  = substr("worker${i}${random_id.prefix.hex}", 0, 8)
       vm_size               = "Standard_D2s_v3"
       node_count            = 1
-      vnet_subnet           = { id = azurerm_subnet.node_pool_subnet[i].id }
+      vnet_subnet_id        = azurerm_subnet.node_pool_subnet[i].id
       create_before_destroy = i % 2 == 0
       upgrade_settings = {
         drain_timeout_in_minutes      = 0
