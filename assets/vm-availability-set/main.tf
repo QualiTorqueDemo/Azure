@@ -43,64 +43,80 @@ resource "azurerm_public_ip" "pip" {
   resource_group_name = local.resource_group.name
 }
 
-module "linux" {
-  source  = "Azure/virtual-machine/azurerm"
-  version = "~> 1.0"
+# --- Linux VM (native resource) ---
 
-  location                   = local.resource_group.location
-  image_os                   = "linux"
-  resource_group_name        = local.resource_group.name
-  allow_extension_operations = false
-  data_disks = [
-    for i in range(2) : {
-      name                 = "linuxdisk${random_id.id.hex}${i}"
-      storage_account_type = "Standard_LRS"
-      create_option        = "Empty"
-      disk_size_gb         = 1
-      attach_setting = {
-        lun     = i
-        caching = "ReadWrite"
-      }
-      disk_encryption_set_id = azurerm_disk_encryption_set.example.id
-    }
-  ]
-  new_boot_diagnostics_storage_account = {
-    customer_managed_key = {
-      key_vault_key_id          = azurerm_key_vault_key.storage_account_key.id
-      user_assigned_identity_id = azurerm_user_assigned_identity.storage_account_key_vault.id
-    }
+resource "azurerm_network_interface" "linux_nic" {
+  location            = local.resource_group.location
+  name                = "linux-nic-${random_id.id.hex}"
+  resource_group_name = local.resource_group.name
+
+  ip_configuration {
+    name                          = "primary"
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = try(azurerm_public_ip.pip[0].id, null)
+    subnet_id                     = module.vnet.vnet_subnets[0]
   }
-  new_network_interface = {
-    ip_forwarding_enabled = false
-    ip_configurations = [
-      {
-        public_ip_address_id = try(azurerm_public_ip.pip[0].id, null)
-        primary              = true
-      }
-    ]
+}
+
+resource "azurerm_linux_virtual_machine" "linux" {
+  admin_username                  = "azureuser"
+  location                        = local.resource_group.location
+  name                            = "ubuntu-${random_id.id.hex}"
+  network_interface_ids           = [azurerm_network_interface.linux_nic.id]
+  resource_group_name             = local.resource_group.name
+  size                            = var.size
+  allow_extension_operations      = false
+  encryption_at_host_enabled      = false
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = tls_private_key.ssh.public_key_openssh
   }
-  admin_username = "azureuser"
-  admin_ssh_keys = [
-    {
-      public_key = tls_private_key.ssh.public_key_openssh
-    }
-  ]
-  name = "ubuntu-${random_id.id.hex}"
-  os_disk = {
+
+  os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  os_simple = "UbuntuServer"
-  size      = var.size
-  subnet_id = module.vnet.vnet_subnets[0]
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "latest"
+  }
+
+  boot_diagnostics {}
 
   depends_on = [azurerm_key_vault_access_policy.des]
 }
 
+resource "azurerm_managed_disk" "linux_data" {
+  count = 2
+
+  create_option          = "Empty"
+  disk_size_gb           = 1
+  location               = local.resource_group.location
+  name                   = "linuxdisk${random_id.id.hex}${count.index}"
+  resource_group_name    = local.resource_group.name
+  storage_account_type   = "Standard_LRS"
+  disk_encryption_set_id = azurerm_disk_encryption_set.example.id
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "linux_data" {
+  count = 2
+
+  caching            = "ReadWrite"
+  lun                = count.index
+  managed_disk_id    = azurerm_managed_disk.linux_data[count.index].id
+  virtual_machine_id = azurerm_linux_virtual_machine.linux.id
+}
+
 resource "azurerm_network_interface_security_group_association" "linux_nic" {
-  network_interface_id      = module.linux.network_interface_id
+  network_interface_id      = azurerm_network_interface.linux_nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
+
+# --- Windows VM (native resource) ---
 
 resource "random_password" "win_password" {
   length      = 20
@@ -113,7 +129,6 @@ resource "random_password" "win_password" {
 }
 
 resource "azurerm_network_interface" "windows_nic" {
-  #checkov:skip=CKV_AZURE_119:It's a demo for how to use public ip
   count = 2
 
   location            = local.resource_group.location
@@ -135,47 +150,53 @@ resource "azurerm_network_interface_security_group_association" "windows_nic" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-module "windows" {
-  source  = "Azure/virtual-machine/azurerm"
-  version = "~> 1.0"
+resource "azurerm_windows_virtual_machine" "windows" {
+  admin_password                  = random_password.win_password.result
+  admin_username                  = "azureuser"
+  location                        = local.resource_group.location
+  name                            = "windows-${random_id.id.hex}"
+  network_interface_ids           = azurerm_network_interface.windows_nic[*].id
+  resource_group_name             = local.resource_group.name
+  size                            = var.size
+  allow_extension_operations      = false
+  encryption_at_host_enabled      = false
 
-  location                   = local.resource_group.location
-  image_os                   = "windows"
-  resource_group_name        = local.resource_group.name
-  allow_extension_operations = false
-  data_disks = [
-    for i in range(2) : {
-      name                 = "windowsdisk${random_id.id.hex}${i}"
-      storage_account_type = "Standard_LRS"
-      create_option        = "Empty"
-      disk_size_gb         = 1
-      attach_setting = {
-        lun     = i
-        caching = "ReadWrite"
-      }
-      disk_encryption_set_id = azurerm_disk_encryption_set.example.id
-    }
-  ]
-  new_boot_diagnostics_storage_account = {
-    customer_managed_key = {
-      key_vault_key_id          = azurerm_key_vault_key.storage_account_key.id
-      user_assigned_identity_id = azurerm_user_assigned_identity.storage_account_key_vault.id
-    }
-  }
-  network_interface_ids = azurerm_network_interface.windows_nic[*].id
-  new_network_interface = null
-  admin_username        = "azureuser"
-  admin_password        = random_password.win_password.result
-  name                  = "windows-${random_id.id.hex}"
-  os_disk = {
+  os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  os_simple = "WindowsServer"
-  size      = var.size
-  subnet_id = module.vnet.vnet_subnets[0]
+
+  source_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2022-Datacenter"
+    version   = "latest"
+  }
+
+  boot_diagnostics {}
 
   depends_on = [azurerm_key_vault_access_policy.des]
+}
+
+resource "azurerm_managed_disk" "windows_data" {
+  count = 2
+
+  create_option          = "Empty"
+  disk_size_gb           = 1
+  location               = local.resource_group.location
+  name                   = "windowsdisk${random_id.id.hex}${count.index}"
+  resource_group_name    = local.resource_group.name
+  storage_account_type   = "Standard_LRS"
+  disk_encryption_set_id = azurerm_disk_encryption_set.example.id
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "windows_data" {
+  count = 2
+
+  caching            = "ReadWrite"
+  lun                = count.index
+  managed_disk_id    = azurerm_managed_disk.windows_data[count.index].id
+  virtual_machine_id = azurerm_windows_virtual_machine.windows.id
 }
 
 resource "local_file" "ssh_private_key" {
@@ -189,5 +210,5 @@ data "azurerm_public_ip" "pip" {
   name                = azurerm_public_ip.pip[count.index].name
   resource_group_name = local.resource_group.name
 
-  depends_on = [module.linux, module.windows]
+  depends_on = [azurerm_linux_virtual_machine.linux, azurerm_windows_virtual_machine.windows]
 }
