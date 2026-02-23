@@ -29,18 +29,6 @@ resource "azurerm_key_vault_access_policy" "kms" {
   key_permissions = [
     "Decrypt",
     "Encrypt",
-  ]
-}
-
-## NOTE: Replaced azurerm_role_assignment with access policy to avoid
-## requiring Microsoft.Authorization/roleAssignments/write permission.
-## If your SP has Owner/User Access Administrator, you can revert to:
-##   resource "azurerm_role_assignment" "kms" { ... }
-resource "azurerm_key_vault_access_policy" "kms_identity" {
-  key_vault_id = azurerm_key_vault.des_vault.id
-  object_id    = azurerm_user_assigned_identity.test.principal_id
-  tenant_id    = azurerm_user_assigned_identity.test.tenant_id
-  key_permissions = [
     "Get",
     "List",
     "Create",

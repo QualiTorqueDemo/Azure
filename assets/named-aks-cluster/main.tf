@@ -85,6 +85,5 @@ module "aks_cluster_name" {
 
   depends_on = [
     azurerm_key_vault_access_policy.kms,
-    azurerm_key_vault_access_policy.kms_identity
   ]
 }
