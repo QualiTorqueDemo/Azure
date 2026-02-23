@@ -15,32 +15,25 @@ import future.keywords.in
 #   "manual_locations": ["swedencentral", "francecentral"]
 # }
 
-# Default result: approve if no other rule matches
+# Default result: approve if no location input found
 default result = {"decision": "Approved", "reason": "No location input found, defaulting to approved."}
-
-# Extract the Azure Region from the inputs array
-get_region(inputs) := value if {
-    some i
-    inputs[i].name == "Azure Region"
-    value := inputs[i].value
-}
 
 # Approved: location is in the approved list
 result = {"decision": "Approved", "reason": concat("", ["Location '", region, "' is approved."])} if {
-    region := get_region(input.inputs)
+    region := input.inputs["Azure Region"]
     region in data.approved_locations
 }
 
 # Manual: location requires manual approval
 result = {"decision": "Manual", "reason": concat("", ["Location '", region, "' requires manual approval."])} if {
-    region := get_region(input.inputs)
+    region := input.inputs["Azure Region"]
     not region in data.approved_locations
     region in data.manual_locations
 }
 
 # Denied: location is not in any allowed list
 result = {"decision": "Denied", "reason": concat("", ["Location '", region, "' is not allowed. Approved: ", sprintf("%v", [data.approved_locations]), ". Manual: ", sprintf("%v", [data.manual_locations]), "."])} if {
-    region := get_region(input.inputs)
+    region := input.inputs["Azure Region"]
     not region in data.approved_locations
     not region in data.manual_locations
 }
