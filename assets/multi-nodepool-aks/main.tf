@@ -61,7 +61,7 @@ locals {
 
 module "aks" {
   source  = "Azure/aks/azurerm"
-  version = "~> 9.0"
+  version = "~> 10.0"
 
   prefix                                      = "prefix-${random_id.prefix.hex}"
   resource_group_name                         = local.resource_group.name

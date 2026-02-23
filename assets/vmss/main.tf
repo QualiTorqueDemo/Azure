@@ -54,7 +54,7 @@ resource "azurerm_orchestrated_virtual_machine_scale_set" "vmss" {
 
 module "linux" {
   source  = "Azure/virtual-machine/azurerm"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   location                   = local.resource_group.location
   image_os                   = "linux"

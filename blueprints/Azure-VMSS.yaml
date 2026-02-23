@@ -21,12 +21,14 @@ inputs:
   VM Size:
     type: string
     description: "Azure VM size for the scale set"
-    default: "Standard_F2"
+    default: "Standard_A1"
     allowed-values:
-      - Standard_F2
-      - Standard_D2s_v3
-      - Standard_D4s_v3
-      - Standard_B2s
+      - Standard_A1
+      - Standard_A2
+      - Standard_D2_v2
+      - Standard_DS1_v2
+      - Standard_A1_v2
+      - Standard_A2_v2
 
 outputs:
   Linux VM VMSS ID:
