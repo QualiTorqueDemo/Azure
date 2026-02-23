@@ -48,7 +48,7 @@ locals {
       name                  = substr("worker${i}${random_id.prefix.hex}", 0, 8)
       vm_size               = "Standard_D2s_v3"
       node_count            = 1
-      vnet_subnet_id        = azurerm_subnet.node_pool_subnet[i].id
+      vnet_subnet           = { id = azurerm_subnet.node_pool_subnet[i].id }
       create_before_destroy = i % 2 == 0
       upgrade_settings = {
         drain_timeout_in_minutes      = 0
@@ -69,7 +69,7 @@ module "aks" {
   os_disk_size_gb                             = 60
   sku_tier                                    = "Standard"
   private_cluster_enabled                     = false
-  vnet_subnet_id                              = azurerm_subnet.default_node_pool_subnet.id
+  vnet_subnet                                 = { id = azurerm_subnet.default_node_pool_subnet.id }
   node_pools                                  = local.nodes
   kubernetes_version                          = var.kubernetes_version
   orchestrator_version                        = var.orchestrator_version
