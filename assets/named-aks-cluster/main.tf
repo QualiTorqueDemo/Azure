@@ -47,7 +47,7 @@ resource "azurerm_log_analytics_workspace" "main" {
 
 module "aks_cluster_name" {
   source  = "Azure/aks/azurerm"
-  version = "~> 10.0"
+  version = "~> 11.0"
 
   prefix                               = "prefix"
   resource_group_name                  = local.resource_group.name
