@@ -63,3 +63,4 @@ grains:
         - instances: '{{ .inputs.Instances }}'
       outputs:
         - linux_vm_vmss_id
+        - instance_private_ips
