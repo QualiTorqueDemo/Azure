@@ -15,7 +15,7 @@ import future.keywords.in
 #   "manual_locations": ["swedencentral", "francecentral"]
 # }
 
-default result = {"decision": "Denied", "reason": "Could not determine Azure location from environment inputs."}
+default result = {"decision": "Approved", "reason": "No Azure Location input found; auto-approved."}
 
 # Approved: location is in the approved list
 result = {"decision": "Approved", "reason": concat("", ["Location '", location, "' is approved."])} if {
@@ -41,9 +41,4 @@ result = {"decision": "Denied", "reason": concat("", ["Location '", location, "'
     location := input.inputs[i].value_v2.value
     not location in data.approved_locations
     not location in data.manual_locations
-}
-
-# Auto-approve Execution actions (e.g. Day 2 operations)
-result = {"decision": "Approved", "reason": "Execution actions are automatically approved."} if {
-    input.action_identifier.entity_type == "Execution"
 }
