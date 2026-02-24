@@ -42,3 +42,8 @@ result = {"decision": "Denied", "reason": concat("", ["Location '", region, "' i
     not region in data.approved_locations
     not region in data.manual_locations
 }
+
+# Auto-approve Execution actions (e.g. Day 2 operations)
+result = {"decision": "Approved", "reason": "Execution actions are automatically approved."} if {
+    input.action_identifier.entity_type == "Execution"
+}
