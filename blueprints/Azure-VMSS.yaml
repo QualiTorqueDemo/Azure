@@ -2,6 +2,10 @@ spec_version: 2
 description: >
   Deploy a Linux Virtual Machine Scale Set (VMSS) on Azure with 
   VNet, NSG, and SSH key authentication.
+metadata:
+  blueprint-labels:
+    - key: hypervisor
+      value: Azure
 labels:
   - Azure-VM
 inputs:
@@ -12,9 +16,9 @@ inputs:
     allowed-values:
       - aks-prod
       - aks-dev-temp
-  Azure Region:
+  Azure Location:
     type: string
-    description: "Azure region for deployment"
+    description: "Azure location for deployment"
     default: "westus2"
     allowed-values:
       - northcentralus
@@ -62,7 +66,7 @@ grains:
       agent:
         name: '{{ .inputs.agent }}'
       inputs:
-        - location: '{{ .inputs.["Azure Region"] }}'
+        - location: '{{ .inputs.["Azure Location"] }}'
         - size: '{{ .inputs.["VM Size"] }}'
         - instances: '{{ .inputs.Instances }}'
       outputs:

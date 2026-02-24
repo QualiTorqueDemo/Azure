@@ -3,6 +3,10 @@ description: >
   Deploy Virtual Machines in an availability set on Azure, including 
   a Linux (Ubuntu) and Windows VM with disk encryption, VNet, NSG, 
   and boot diagnostics.
+metadata:
+  blueprint-labels:
+    - key: hypervisor
+      value: Azure
 
 inputs:
   agent:
@@ -12,9 +16,9 @@ inputs:
     allowed-values:
       - aks-prod
       - aks-dev-temp
-  Azure Region:
+  Azure Location:
     type: string
-    description: "Azure region for deployment"
+    description: "Azure location for deployment"
     default: "westus2"
     allowed-values:
       - northcentralus
@@ -50,7 +54,7 @@ grains:
       agent:
         name: '{{ .inputs.agent }}'
       inputs:
-        - location: '{{ .inputs.["Azure Region"] }}'
+        - location: '{{ .inputs.["Azure Location"] }}'
         - size: '{{ .inputs.["VM Size"] }}'
       outputs:
         - linux_vm_id

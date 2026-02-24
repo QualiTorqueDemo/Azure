@@ -2,6 +2,10 @@ spec_version: 2
 description: >
   Deploy an Azure SQL Database with Azure AD authentication, 
   firewall rules, and auto-generated admin credentials.
+metadata:
+  blueprint-labels:
+    - key: hypervisor
+      value: Azure
 
 inputs:
   agent:
@@ -11,9 +15,9 @@ inputs:
     allowed-values:
       - aks-prod
       - aks-dev-temp
-  Azure Region:
+  Azure Location:
     type: string
-    description: "Azure region for deployment"
+    description: "Azure location for deployment"
     default: "westus2"
     allowed-values:
       - northcentralus
@@ -54,7 +58,7 @@ grains:
       agent:
         name: '{{ .inputs.agent }}'
       inputs:
-        - location: '{{ .inputs.["Azure Region"] }}'
+        - location: '{{ .inputs.["Azure Location"] }}'
         - db_name: '{{ .inputs.["Database Name"] }}'
         - sql_admin_username: '{{ .inputs.["SQL Admin Username"] }}'
       outputs:

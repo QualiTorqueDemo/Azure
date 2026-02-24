@@ -2,6 +2,10 @@ spec_version: 2
 description: >
   Deploy a Virtual Network in Azure with 3 subnets, NSG, route table, 
   service endpoints, subnet delegation, and private link policies.
+metadata:
+  blueprint-labels:
+    - key: hypervisor
+      value: Azure
 
 inputs:
   agent:
@@ -11,9 +15,9 @@ inputs:
     allowed-values:
       - aks-prod
       - aks-dev-temp
-  Azure Region:
+  Azure Location:
     type: string
-    description: "Azure region for the VNet"
+    description: "Azure location for the VNet"
     default: "westus2"
     allowed-values:
       - northcentralus
@@ -38,6 +42,6 @@ grains:
       agent:
         name: '{{ .inputs.agent }}'
       inputs:
-        - vnet_location: '{{ .inputs.["Azure Region"] }}'
+        - vnet_location: '{{ .inputs.["Azure Location"] }}'
       outputs:
         - test_vnet_id
