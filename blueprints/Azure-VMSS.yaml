@@ -38,6 +38,7 @@ grains:
   vmss:
     kind: terraform
     spec:
+      auto-approve: false
       source:
         store: Azure
         path: assets/vmss
