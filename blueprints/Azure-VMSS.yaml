@@ -43,6 +43,9 @@ outputs:
   Linux VM VMSS ID:
     value: '{{ .grains.vmss.outputs.linux_vm_vmss_id }}'
     quick: true
+  Instance Private IPs:
+    value: '{{ .grains.vmss.outputs.instance_private_ips }}'
+    quick: true
 
 grains:
   vmss:

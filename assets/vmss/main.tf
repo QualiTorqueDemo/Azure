@@ -78,3 +78,10 @@ resource "local_file" "ssh_private_key" {
   filename = "${path.module}/key.pem"
   content  = tls_private_key.ssh.private_key_pem
 }
+
+data "azurerm_virtual_machine_scale_set" "vmss" {
+  name                = azurerm_linux_virtual_machine_scale_set.vmss.name
+  resource_group_name = local.resource_group.name
+
+  depends_on = [azurerm_linux_virtual_machine_scale_set.vmss]
+}
