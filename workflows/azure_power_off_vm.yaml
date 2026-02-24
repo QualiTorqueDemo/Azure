@@ -1,0 +1,19 @@
+spec_version: 2
+description: Workflow to power off Azure VMs via built-in action
+workflow:
+  scope: env
+  labels-selector: Azure-VM
+  triggers:
+    - type: manual
+    - type: cron 
+      cron: '0 22 * * *' # every day at 22:00
+      overridable: true # Allow end-users to override the cron
+grains:
+  power_off_azvm:
+    kind: ansible
+    spec:
+      built-in: true
+      source:
+        path: https://github.com/QualiTorque/torque-actions.git//resource/azure-power-off-vm-tf.yaml
+      agent:
+        name: 'aks-prod'
