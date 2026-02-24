@@ -4,9 +4,6 @@ description: >
   service endpoints, subnet delegation, and private link policies.
 
 inputs:
-  agent:
-    type: agent
-    description: "Select the Torque agent to deploy this environment"
   Azure Region:
     type: string
     description: "Azure region for the VNet"
@@ -32,7 +29,7 @@ grains:
         store: Azure
         path: assets/virtual-network
       agent:
-        name: '{{ .inputs.agent }}'
+        name: '{{ .params.default_aks_host }}'
       inputs:
         - vnet_location: '{{ .inputs.["Azure Region"] }}'
       outputs:

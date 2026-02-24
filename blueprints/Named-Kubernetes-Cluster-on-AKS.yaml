@@ -5,9 +5,6 @@ description: >
   disk encryption set, and private cluster configuration.
 
 inputs:
-  agent:
-    type: agent
-    description: "Select the Torque agent to deploy this environment"
   Azure Region:
     type: string
     description: "Azure region for deployment"
@@ -33,7 +30,7 @@ grains:
         store: Azure
         path: assets/named-aks-cluster
       agent:
-        name: '{{ .inputs.agent }}'
+        name: '{{ .params.default_aks_host }}'
       inputs:
         - location: '{{ .inputs.["Azure Region"] }}'
       outputs:
