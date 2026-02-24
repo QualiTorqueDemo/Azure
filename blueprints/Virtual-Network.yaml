@@ -6,7 +6,7 @@ metadata:
   blueprint-labels:
     - key: hypervisor
       value: Azure
-    - key: terraform
+    - key: Terraform
 
 inputs:
   agent:
