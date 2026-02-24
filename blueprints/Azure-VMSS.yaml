@@ -3,7 +3,7 @@ description: >
   Deploy a Virtual Machine Scale Set (VMSS) on Azure with a Linux VM, 
   VNet, NSG, and SSH key authentication.
 labels:
-  - Hypervisor: Azure-VM
+  - Azure-VM
 inputs:
   agent:
     type: agent
