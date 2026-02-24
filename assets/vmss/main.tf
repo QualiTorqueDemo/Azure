@@ -24,9 +24,9 @@ module "vnet" {
   use_for_each        = true
   vnet_location       = local.resource_group.location
   address_space       = ["192.168.0.0/24"]
-  vnet_name           = "vnet-vm-${random_id.id.hex}"
-  subnet_names        = ["subnet-virtual-machine"]
-  subnet_prefixes     = ["192.168.0.0/28"]
+  vnet_name           = "vnet-vmss-${random_id.id.hex}"
+  subnet_names        = ["subnet-vmss"]
+  subnet_prefixes     = ["192.168.0.0/24"]
 }
 
 resource "tls_private_key" "ssh" {
@@ -34,61 +34,44 @@ resource "tls_private_key" "ssh" {
   rsa_bits  = "4096"
 }
 
-resource "azurerm_orchestrated_virtual_machine_scale_set" "vmss" {
-  location                    = local.resource_group.location
-  name                        = "vmssflex-${random_id.id.hex}"
-  platform_fault_domain_count = 1
-  resource_group_name         = local.resource_group.name
+resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
+  name                = "vmss-${random_id.id.hex}"
+  resource_group_name = local.resource_group.name
+  location            = local.resource_group.location
+  sku                 = var.size
+  instances           = var.instances
+  admin_username      = "azureuser"
+  upgrade_mode        = "Manual"
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = tls_private_key.ssh.public_key_openssh
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "latest"
+  }
 
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  source_image_reference {
-    offer     = "0001-com-ubuntu-server-jammy"
-    publisher = "Canonical"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
-}
 
-module "linux" {
-  source  = "Azure/virtual-machine/azurerm"
-  version = "~> 2.0"
+  network_interface {
+    name    = "nic-vmss-${random_id.id.hex}"
+    primary = true
 
-  location                   = local.resource_group.location
-  image_os                   = "linux"
-  resource_group_name        = local.resource_group.name
-  allow_extension_operations = false
-  boot_diagnostics           = false
-  new_network_interface = {
-    ip_forwarding_enabled = false
-    ip_configurations = [
-      {
-        primary = true
-      }
-    ]
-  }
-  admin_username = "azureuser"
-  admin_ssh_keys = [
-    {
-      public_key = tls_private_key.ssh.public_key_openssh
+    ip_configuration {
+      name      = "internal"
+      primary   = true
+      subnet_id = module.vnet.vnet_subnets[0]
     }
-  ]
-  name = "ubuntu-${random_id.id.hex}"
-  os_disk = {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-  os_simple                    = "UbuntuServer"
-  size                         = var.size
-  subnet_id                    = module.vnet.vnet_subnets[0]
-  virtual_machine_scale_set_id = azurerm_orchestrated_virtual_machine_scale_set.vmss.id
-}
 
-resource "azurerm_network_interface_security_group_association" "vmss" {
-  network_interface_id      = module.linux.network_interface_id
-  network_security_group_id = azurerm_network_security_group.nsg.id
+    network_security_group_id = azurerm_network_security_group.nsg.id
+  }
 }
 
 resource "local_file" "ssh_private_key" {

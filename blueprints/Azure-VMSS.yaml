@@ -1,6 +1,6 @@
 spec_version: 2
 description: >
-  Deploy a Virtual Machine Scale Set (VMSS) on Azure with a Linux VM, 
+  Deploy a Linux Virtual Machine Scale Set (VMSS) on Azure with 
   VNet, NSG, and SSH key authentication.
 labels:
   - Azure-VM
@@ -21,13 +21,23 @@ inputs:
       - westus2
   VM Size:
     type: string
-    description: "Azure VM size for the scale set"
+    description: "Azure VM size for the scale set instances"
     default: "Standard_A1_v2"
     allowed-values:
       - Standard_A1_v2
       - Standard_A2_v2
       - Standard_D2_v2
       - Standard_DS1_v2
+  Instances:
+    type: string
+    description: "Number of VM instances in the scale set"
+    default: "2"
+    allowed-values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
 
 outputs:
   Linux VM VMSS ID:
@@ -47,5 +57,6 @@ grains:
       inputs:
         - location: '{{ .inputs.["Azure Region"] }}'
         - size: '{{ .inputs.["VM Size"] }}'
+        - instances: '{{ .inputs.Instances }}'
       outputs:
         - linux_vm_vmss_id
