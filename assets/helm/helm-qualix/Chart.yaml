@@ -1,5 +1,0 @@
-apiVersion: v1
-name: helm-qualix
-version: 0.1.0
-home: https://quali.com
-description: QualiX Deployment via Helm
