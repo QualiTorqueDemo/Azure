@@ -5,6 +5,13 @@ description: >
   node pools with configurable Kubernetes version.
 
 inputs:
+  agent:
+    type: string
+    description: "Select the Torque agent to deploy this environment"
+    default: '{{ .params.default_aks_host }}'
+    allowed-values:
+      - aks-prod
+      - aks-dev-temp
   Azure Region:
     type: string
     description: "Azure region for deployment"
@@ -27,6 +34,6 @@ grains:
         store: Azure
         path: assets/multi-nodepool-aks
       agent:
-        name: '{{ .params.default_aks_host }}'
+        name: '{{ .inputs.agent }}'
       inputs:
         - location: '{{ .inputs.["Azure Region"] }}'

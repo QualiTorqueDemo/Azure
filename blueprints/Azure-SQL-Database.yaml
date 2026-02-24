@@ -4,6 +4,13 @@ description: >
   firewall rules, and auto-generated admin credentials.
 
 inputs:
+  agent:
+    type: string
+    description: "Select the Torque agent to deploy this environment"
+    default: '{{ .params.default_aks_host }}'
+    allowed-values:
+      - aks-prod
+      - aks-dev-temp
   Azure Region:
     type: string
     description: "Azure region for deployment"
@@ -45,7 +52,7 @@ grains:
         store: Azure
         path: assets/SQLDB
       agent:
-        name: '{{ .params.default_aks_host }}'
+        name: '{{ .inputs.agent }}'
       inputs:
         - location: '{{ .inputs.["Azure Region"] }}'
         - db_name: '{{ .inputs.["Database Name"] }}'

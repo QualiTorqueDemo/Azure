@@ -5,6 +5,13 @@ instructions:
     store: Azure
     path: instructions/VM_Azure_QualiX.md
 inputs:
+  agent:
+    type: string
+    description: "Select the Torque agent to deploy this environment"
+    default: '{{ .params.default_aks_host }}'
+    allowed-values:
+      - aks-prod
+      - aks-dev-temp
   Azure Region:
     type: string
     description: "Azure region for deployment"
@@ -41,7 +48,7 @@ grains:
         path: assets/helm/helm-qualix
       namespace: '{{ .params.default_aks_host_namespace }}'
       agent:
-        name: '{{ .params.default_aks_host }}'
+        name: '{{ .inputs.agent }}'
         service-account: default
       inputs:
       - sandbox_id: '{{ sandboxid | downcase }}'
@@ -65,7 +72,7 @@ grains:
         store: Azure
         path: assets/terraform/azure/env_infra
       agent:
-        name: '{{ .params.default_aks_host }}'
+        name: '{{ .inputs.agent }}'
       inputs:
         - source_cidr: '{{.grains.helm-qualix.scripts.post-helm-install.outputs.qualix_outbound_ip | strip_newlines}}/32'
         - env_id: '{{ sandboxid | downcase }}'
@@ -83,7 +90,7 @@ grains:
         store: Azure
         path: assets/terraform/azure/vm-qualix
       agent:
-        name: '{{ .params.default_aks_host }}'
+        name: '{{ .inputs.agent }}'
       inputs:
         - env_details: '{ "rg_name":   "{{.grains.Env_Infrastructure.outputs.rg_name}}", 
                           "vnet_name": "{{.grains.Env_Infrastructure.outputs.vnet_name}}",
