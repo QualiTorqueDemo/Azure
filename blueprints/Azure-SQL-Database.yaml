@@ -7,7 +7,7 @@ inputs:
   agent:
     type: string
     description: "Select the Torque agent to deploy this environment"
-    default: '{{ .params.default_aks_host }}'
+    default: "aks-prod"
     allowed-values:
       - aks-prod
       - aks-dev-temp
