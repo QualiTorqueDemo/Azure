@@ -5,6 +5,17 @@ instructions:
     store: Azure
     path: instructions/VM_Azure_QualiX.md
 inputs:
+  Azure Region:
+    type: string
+    description: "Azure region for deployment"
+    default: "westus2"
+    allowed-values:
+      - northcentralus
+      - swedencentral
+      - francecentral
+      - northeurope
+      - westus
+      - westus2
   VM Name:
     type: string
     default: MyVM
@@ -58,7 +69,7 @@ grains:
       inputs:
         - source_cidr: '{{.grains.helm-qualix.scripts.post-helm-install.outputs.qualix_outbound_ip | strip_newlines}}/32'
         - env_id: '{{ sandboxid | downcase }}'
-        - location: westus2
+        - location: '{{ .inputs.["Azure Region"] }}'
         - env_start_address: 10.0.0.0
       outputs:
       - rg_name
