@@ -82,7 +82,6 @@ resource "local_file" "ssh_private_key" {
 data "azurerm_virtual_machine_scale_set" "vmss" {
   name                = azurerm_linux_virtual_machine_scale_set.vmss.name
   resource_group_name = local.resource_group.name
-  // todo: a comment
-
+  
   depends_on = [azurerm_linux_virtual_machine_scale_set.vmss]
 }
