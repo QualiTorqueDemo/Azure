@@ -4,6 +4,7 @@ description: >
   a Linux (Ubuntu) and Windows VM with disk encryption, VNet, NSG, 
   and boot diagnostics.
 metadata:
+  self-service: true
   blueprint-labels:
     - key: hypervisor
       value: Azure

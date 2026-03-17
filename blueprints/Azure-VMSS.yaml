@@ -3,6 +3,7 @@ description: >
   Deploy a Linux Virtual Machine Scale Set (VMSS) on Azure with 
   VNet, NSG, and SSH key authentication.
 metadata:
+  self-service: true
   blueprint-labels:
     - key: hypervisor
       value: Azure

@@ -4,6 +4,7 @@ description: >
   through Azure Log Analytics, Azure AD RBAC, KMS etcd encryption, 
   disk encryption set, and private cluster configuration.
 metadata:
+  self-service: true
   blueprint-labels:
     - key: hypervisor
       value: Azure

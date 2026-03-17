@@ -3,6 +3,7 @@ description: >
   Deploy a Virtual Network in Azure with 3 subnets, NSG, route table, 
   service endpoints, subnet delegation, and private link policies.
 metadata:
+  self-service: true
   blueprint-labels:
     - key: hypervisor
       value: Azure

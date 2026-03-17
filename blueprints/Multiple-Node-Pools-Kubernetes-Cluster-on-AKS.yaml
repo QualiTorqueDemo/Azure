@@ -4,6 +4,7 @@ description: >
   monitoring support through Azure Log Analytics. Includes 3 worker 
   node pools with configurable Kubernetes version.
 metadata:
+  self-service: true
   blueprint-labels:
     - key: hypervisor
       value: Azure

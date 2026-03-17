@@ -3,6 +3,7 @@ description: >
   Deploy an Azure SQL Database with Azure AD authentication, 
   firewall rules, and auto-generated admin credentials.
 metadata:
+  self-service: true
   blueprint-labels:
     - key: hypervisor
       value: Azure
