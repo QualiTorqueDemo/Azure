@@ -4,6 +4,8 @@ description: >
   VNet, NSG, and SSH key authentication.
 metadata:
   self-service: true
+  icon:
+    path: graphics/Azure VM Scale Set.svg
   blueprint-labels:
     - key: hypervisor
       value: Azure

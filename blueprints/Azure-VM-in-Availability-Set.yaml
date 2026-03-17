@@ -5,6 +5,8 @@ description: >
   and boot diagnostics.
 metadata:
   self-service: true
+  icon:
+    path: graphics/Azure VMs.svg
   blueprint-labels:
     - key: hypervisor
       value: Azure

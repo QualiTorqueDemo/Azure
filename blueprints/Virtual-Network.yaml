@@ -4,6 +4,8 @@ description: >
   service endpoints, subnet delegation, and private link policies.
 metadata:
   self-service: true
+  icon:
+    path: graphics/Azure Virtual Network.svg
   blueprint-labels:
     - key: hypervisor
       value: Azure

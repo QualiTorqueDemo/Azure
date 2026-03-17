@@ -4,6 +4,8 @@ description: >
   firewall rules, and auto-generated admin credentials.
 metadata:
   self-service: true
+  icon:
+    path: graphics/SQL Database_Logo.svg
   blueprint-labels:
     - key: hypervisor
       value: Azure

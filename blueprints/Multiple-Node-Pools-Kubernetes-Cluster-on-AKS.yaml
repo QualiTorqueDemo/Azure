@@ -5,6 +5,8 @@ description: >
   node pools with configurable Kubernetes version.
 metadata:
   self-service: true
+  icon:
+    path: graphics/AKS.svg
   blueprint-labels:
     - key: hypervisor
       value: Azure
