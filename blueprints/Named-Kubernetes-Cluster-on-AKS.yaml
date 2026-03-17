@@ -5,6 +5,7 @@ description: >
   disk encryption set, and private cluster configuration.
 metadata:
   self-service: true
+  display-name: Azure Named AKS Cluster
   icon:
     path: graphics/AKS.svg
   blueprint-labels:
@@ -48,6 +49,8 @@ grains:
         path: assets/named-aks-cluster
       agent:
         name: '{{ .inputs.agent }}'
+      tags:
+        auto-tag: true
       inputs:
         - location: '{{ .inputs.["Azure Location"] }}'
       outputs:

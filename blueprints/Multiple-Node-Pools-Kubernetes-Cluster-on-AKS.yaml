@@ -5,6 +5,7 @@ description: >
   node pools with configurable Kubernetes version.
 metadata:
   self-service: true
+  display-name: Azure AKS with Multiple Node Pools
   icon:
     path: graphics/AKS.svg
   blueprint-labels:
@@ -45,5 +46,7 @@ grains:
         path: assets/multi-nodepool-aks
       agent:
         name: '{{ .inputs.agent }}'
+      tags:
+        auto-tag: true
       inputs:
         - location: '{{ .inputs.["Azure Location"] }}'

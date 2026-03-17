@@ -4,6 +4,7 @@ description: >
   service endpoints, subnet delegation, and private link policies.
 metadata:
   self-service: true
+  display-name: Azure Virtual Network
   icon:
     path: graphics/Azure Virtual Network.svg
   blueprint-labels:
@@ -47,6 +48,8 @@ grains:
         path: assets/virtual-network
       agent:
         name: '{{ .inputs.agent }}'
+      tags:
+        auto-tag: true
       inputs:
         - vnet_location: '{{ .inputs.["Azure Location"] }}'
       outputs:

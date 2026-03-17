@@ -4,6 +4,7 @@ description: >
   firewall rules, and auto-generated admin credentials.
 metadata:
   self-service: true
+  display-name: Azure SQL Database
   icon:
     path: graphics/SQL Database_Logo.svg
   blueprint-labels:
@@ -63,6 +64,8 @@ grains:
         path: assets/SQLDB
       agent:
         name: '{{ .inputs.agent }}'
+      tags:
+        auto-tag: true
       inputs:
         - location: '{{ .inputs.["Azure Location"] }}'
         - db_name: '{{ .inputs.["Database Name"] }}'

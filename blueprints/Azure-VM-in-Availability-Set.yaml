@@ -5,6 +5,7 @@ description: >
   and boot diagnostics.
 metadata:
   self-service: true
+  display-name: Azure VM in Availability Set
   icon:
     path: graphics/Azure VMs.svg
   blueprint-labels:
@@ -59,6 +60,8 @@ grains:
         path: assets/vm-availability-set
       agent:
         name: '{{ .inputs.agent }}'
+      tags:
+        auto-tag: true
       inputs:
         - location: '{{ .inputs.["Azure Location"] }}'
         - size: '{{ .inputs.["VM Size"] }}'

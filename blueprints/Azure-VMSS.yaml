@@ -4,6 +4,7 @@ description: >
   VNet, NSG, and SSH key authentication.
 metadata:
   self-service: true
+  display-name: Azure VM Scale Set
   icon:
     path: graphics/Azure VM Scale Set.svg
   blueprint-labels:
@@ -71,6 +72,8 @@ grains:
         path: assets/vmss
       agent:
         name: '{{ .inputs.agent }}'
+      tags:
+        auto-tag: true
       inputs:
         - location: '{{ .inputs.["Azure Location"] }}'
         - size: '{{ .inputs.["VM Size"] }}'
