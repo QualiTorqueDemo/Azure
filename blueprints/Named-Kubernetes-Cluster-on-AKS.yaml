@@ -10,6 +10,8 @@ metadata:
   blueprint-labels:
     - key: hypervisor
       value: Azure
+    - key: category
+      value: Cloud
     - key: Terraform
 
 inputs:
