@@ -16,6 +16,8 @@ metadata:
 labels:
   - Azure-VM
 inputs:
+  agent:
+    type: agent
   Azure Location:
     type: string
     description: "Azure location for deployment"
@@ -64,7 +66,7 @@ grains:
         store: Azure
         path: assets/vmss
       agent:
-        name: ""
+        name: '{{ .inputs.agent }}'
       tags:
         auto-tag: true
       inputs:
