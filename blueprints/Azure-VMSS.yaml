@@ -63,6 +63,8 @@ grains:
       source:
         store: Azure
         path: assets/vmss
+      agent:
+        name: ""
       tags:
         auto-tag: true
       inputs:
