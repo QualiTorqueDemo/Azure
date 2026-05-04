@@ -22,7 +22,7 @@ inputs:
     default: "aks-prod"
     allowed-values:
       - aks-prod
-      - aks-dev-temp
+      - aks-dev
   Azure Location:
     type: string
     description: "Azure location for deployment"

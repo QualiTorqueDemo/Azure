@@ -17,7 +17,12 @@ labels:
   - Azure-VM
 inputs:
   agent:
-    type: agent
+    type: string
+    description: "Select the Torque agent to deploy this environment"
+    default: "aks-prod"
+    allowed-values:
+      - aks-prod
+      - aks-dev
   Azure Location:
     type: string
     description: "Azure location for deployment"
