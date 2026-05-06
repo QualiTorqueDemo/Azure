@@ -18,8 +18,6 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  use_aks_workload_identity = true
-  subscription_id           = "dd511d84-87e2-4666-9485-e01a7d854653"
 }
 
 provider "random" {}
