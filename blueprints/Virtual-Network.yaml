@@ -22,6 +22,7 @@ inputs:
     allowed-values:
       - aks-prod
       - aks-dev
+      - aks-prod-new
   Azure Location:
     type: string
     description: "Azure location for the VNet"
